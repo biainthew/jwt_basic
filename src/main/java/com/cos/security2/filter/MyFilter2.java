@@ -6,13 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Objects;
 
 public class MyFilter2 implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        // 부모 타입 (ServletRequest, ServletResponse) 으로는 HTTP 전용 정보 (getRequestURI() 등) 에 접근할 수 없기 때문에 형변환
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
@@ -25,17 +24,19 @@ public class MyFilter2 implements Filter {
             return;
         }
 
-        if(request.getMethod().equals("POST")) {
-            String headerAuth = request.getHeader("Authorization");
-            System.out.println("headerAuth: " + headerAuth);
+//        if(request.getMethod().equals("POST")) {
+//            String headerAuth = request.getHeader("Authorization");
+//            System.out.println("headerAuth: " + headerAuth);
+//
+//            if (Objects.equals(headerAuth, "Bia")) {
+//                System.out.println("필터2 실행 - URI: " + request.getRequestURI());
+//                filterChain.doFilter(servletRequest, servletResponse);
+//            } else {
+//                PrintWriter out = response.getWriter();
+//                out.println("인증 안 됨");
+//            }
+//        }
 
-            if (Objects.equals(headerAuth, "Bia")) {
-                System.out.println("필터2 실행 - URI: " + request.getRequestURI());
-                filterChain.doFilter(servletRequest, servletResponse);
-            } else {
-                PrintWriter out = response.getWriter();
-                out.println("인증 안 됨");
-            }
-        }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }
